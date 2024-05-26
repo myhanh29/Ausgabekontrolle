@@ -16,23 +16,31 @@ namespace Ausgabenkontrolle
         private string userControlText;
         private string[] labels;
         private string[] datas;
+        private Pen invalidPen;
 
         public UserControl1(string[] labels, string[] datas)
         {
             InitializeComponent();
             this.labels = labels;
             this.datas = datas;
+            invalidPen = new Pen(Color.Black, 2);
+            SetStyle(ControlStyles.ResizeRedraw, true);
         }
 
-        protected override void OnPaint(PaintEventArgs e)
+        public (string[] labels, string[] datas) GetContent()
         {
-            base.OnPaint(e);
-            Pen linePen = new Pen(Color.Black, 1);
+            return (labels, datas);
+        }
+
+        protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+        {
+          
+
             int columnWidth = this.Width / 2;
             for (int i = 0; i <= labels.Length; i++)
             {
                 int y = 0 + i * 20;
-                e.Graphics.DrawLine(linePen, 0, y, this.Width, y);
+                e.Graphics.DrawLine(invalidPen, 0, y, this.Width, y);
             }
             var font = new Font("Arial", 10);
             for (int i = 0; i < labels.Length; i++)

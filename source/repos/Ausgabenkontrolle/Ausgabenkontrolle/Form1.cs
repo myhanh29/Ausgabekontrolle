@@ -8,11 +8,12 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Configuration;
+
 using System.Diagnostics;
 using System.IO;
 using iTextSharp.text;
 using System.Data.SqlClient;
+using System.Configuration;
 
 using iTextSharp.text.pdf;
 using System.Drawing.Printing;
@@ -30,13 +31,16 @@ namespace Ausgabenkontrolle
         }
         private string theDate;
 
+        // Ereignishandler für die Datumsänderung
         private void inputDate(object sender, EventArgs e)
         {
             theDate = dateTimePicker1.Value.ToString("dd.MM.yyyy");
         }
 
+        // Ereignishandler für das Speichern eines Benutzers
         private void SaveUser(object sender, EventArgs e)
-        { 
+        {
+          
         string[] labels = { "Vorname: ", "Nachname: ", "Geburtdatum: ", "Anschrift: ", "Handynummer: " };
         string[] datas = { textBox1.Text, textBox2.Text, theDate, textBox3.Text, textBox4.Text };
         
@@ -61,10 +65,54 @@ namespace Ausgabenkontrolle
             button2.Click += Button2_Click; 
             form.ShowDialog();
         }
+        // Methode zum Speichern der Daten in der Datenbank
+       private void SavetoDB(object sender, EventArgs e)
+        {
+            // Verbindungszeichenfolge aus der Konfiguration abrufen
+            string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
+            // SQL-Befehl zum Einfügen von Daten in die Tabelle Userdatas
+            string myinsert = "INSERT INTO UserData (Vorname, Nachname, Geburtdatum, Anschrift, Handynummer) VALUES (@Vorname, @Nachname, @Geburtdatum, @Anschrift, @Handynummer)";
+
+            // using-Anweisungen zur korrekten Freigabe der Ressourcen verwenden
+            using (SqlConnection sqlConnection = new SqlConnection(con_string))
+            {
+                SqlCommand mycom = new SqlCommand(myinsert, sqlConnection);
+                
+             
+                    mycom.Parameters.AddWithValue("@Vorname", textBox1.Text);
+                    mycom.Parameters.AddWithValue("@Nachname", textBox2.Text);
+                if (!string.IsNullOrEmpty(theDate))
+                {
+                    if (DateTime.TryParseExact(theDate, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                    {
+                        mycom.Parameters.AddWithValue("@Geburtdatum", parsedDate);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid date format. Please enter the date in dd.MM.yyyy format.");
+                        return;
+                    }
+                }
+                else
+                {
+                    mycom.Parameters.AddWithValue("@Geburtdatum", DBNull.Value);
+                }
+
+
+                mycom.Parameters.AddWithValue("@Anschrift", textBox3.Text);
+                    mycom.Parameters.AddWithValue("@Handynummer", textBox4.Text);
+                    // Verbindung öffnen und SQL-Befehl ausführen
+                    sqlConnection.Open();
+                    mycom.ExecuteNonQuery();
+                
+            }
+        } 
+        // Ereignishandler für den Klick auf den Speichern-Button
         private void Button1_Click(object sender, EventArgs e, Form form)
         {
-            SaveFileDialog svg = new SaveFileDialog()
+            SavetoDB(sender, e);
+           SaveFileDialog svg = new SaveFileDialog()
             {
                 Filter = "PDF files (*.pdf)|*.pdf"
             };
@@ -100,12 +148,12 @@ namespace Ausgabenkontrolle
                 }
             }
         }
-
+        // Ereignishandler für den Klick auf den Abbrechen-Button
         private void Button2_Click(object sender, EventArgs e)
         {
             Close();
         }
-
+        // Ereignishandler für das Löschen der Daten
         private void DeleteData(object sender, EventArgs e)
         {
             textBox1.Clear();
@@ -115,6 +163,6 @@ namespace Ausgabenkontrolle
             textBox4.Clear();
         }
 
-      
+ 
     }
 }

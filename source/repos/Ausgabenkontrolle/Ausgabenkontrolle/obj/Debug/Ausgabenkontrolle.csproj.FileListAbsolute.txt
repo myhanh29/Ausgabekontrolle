@@ -13,3 +13,7 @@ C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Debug\Bounc
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Debug\itextsharp.dll
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Debug\itextsharp.xml
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Debug\Ausgabenkontrolle.csproj.CopyComplete
+C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Debug\System.Data.SqlClient.dll
+C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Debug\System.Data.SqlClient.xml
+C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Debug\System.Configuration.ConfigurationManager.xml

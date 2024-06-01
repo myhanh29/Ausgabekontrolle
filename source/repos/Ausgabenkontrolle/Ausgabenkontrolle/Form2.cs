@@ -29,18 +29,25 @@ namespace Ausgabenkontrolle
         {
             InitializeComponent();
         }
+        private DataGridView dgv;
 
         private void Form2_Load(object sender, EventArgs e)
         {
+            LoadData();
+        }
+
+        public void LoadData()
+        {
             // Verbindungszeichenfolge aus der Konfiguration abrufen
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            DataGridView dgv = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            };
-            Form userlist = new Form();
-            userlist.Controls.Add(dgv);
+        DataGridView dgv = new DataGridView
+        {
+            Dock = DockStyle.Fill,
+            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        };
+        Form userlist = new Form();
+        userlist.Size = new Size(800, 600);
+        userlist.Controls.Add(dgv);
             // using-Anweisungen zur korrekten Freigabe der Ressourcen verwenden
             using (SqlConnection sqlConnection = new SqlConnection(con_string))
             {
@@ -49,8 +56,8 @@ namespace Ausgabenkontrolle
                 {
                     sqlConnection.Open();
                     SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                    DataSet ds = new DataSet();
-                    sda.Fill(ds);
+    DataSet ds = new DataSet();
+    sda.Fill(ds);
 
                     foreach (DataRow dr in ds.Tables[0].Rows)
                     {
@@ -59,21 +66,39 @@ namespace Ausgabenkontrolle
                 }
 
             }
-            Button button1 = new Button();
-            button1.Text = "Save to PDF";
-            button1.Dock = DockStyle.Bottom;
-            userlist.Controls.Add(button1);
-            button1.Click += (s, eventArgs) => { SaveToPDF(s, eventArgs, userlist, dgv); };
+            DataGridViewButtonColumn col = new DataGridViewButtonColumn();
+col.UseColumnTextForButtonValue = true;
+col.Text = "Bearbeiten";
 
-            Button button2 = new Button();
-            button2.Text = "Save to EXCEL";
-            button2.Dock = DockStyle.Bottom;
-            userlist.Controls.Add(button2);
-            button2.Click += (s, eventArgs) => { SaveToEXCEL(s, eventArgs, userlist, dgv); };
-            userlist.ShowDialog();
+col.Name = "Option";
+dgv.Columns.Add(col);
+dgv.CellClick += dgv_CellClick;
+Button button1 = new Button();
+button1.Text = "Save to PDF";
+button1.Dock = DockStyle.Bottom;
+userlist.Controls.Add(button1);
+button1.Click += (s, eventArgs) => { SaveToPDF(s, eventArgs, userlist, dgv); };
+
+Button button2 = new Button();
+button2.Text = "Save to EXCEL";
+button2.Dock = DockStyle.Bottom;
+userlist.Controls.Add(button2);
+button2.Click += (s, eventArgs) => { SaveToEXCEL(s, eventArgs, userlist, dgv); };
+userlist.ShowDialog();
 
         }
+ 
+        private void dgv_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int value = e.RowIndex + 1;
 
+            Form3 form3 = new Form3(value, this);
+            form3.Show();
+            this.Hide();
+
+            // MessageBox.Show("Bearbeiten button clicked for row " + e.RowIndex);
+
+        }
         private void SaveToPDF(object sender, EventArgs e, Form userlist, DataGridView dgv)
         {
             SaveFileDialog svg = new SaveFileDialog()
@@ -113,7 +138,7 @@ namespace Ausgabenkontrolle
                 }
              
             }
-            Close();
+        
         }
         private void SaveToEXCEL(object sender, EventArgs e, Form userlist, DataGridView dgv)
         {
@@ -152,7 +177,7 @@ namespace Ausgabenkontrolle
                 ReleaseObject(xlWorkSheet);
                 ReleaseObject(xlWorkBook);
                 ReleaseObject(xlexcel);
-                Close();
+              
             }
         }
 

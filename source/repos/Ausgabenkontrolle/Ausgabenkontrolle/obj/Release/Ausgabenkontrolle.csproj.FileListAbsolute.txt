@@ -11,8 +11,6 @@ C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\bin\Release\Sys
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.csproj.AssemblyReference.cache
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.csproj.SuggestedBindingRedirects.cache
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.Form1.resources
-C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.Form2.resources
-C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.Form3.resources
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.Properties.Resources.resources
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.csproj.GenerateResource.cache
 C:\Users\MyHanh\source\repos\Ausgabenkontrolle\Ausgabenkontrolle\obj\Release\Ausgabenkontrolle.csproj.CoreCompileInputs.cache

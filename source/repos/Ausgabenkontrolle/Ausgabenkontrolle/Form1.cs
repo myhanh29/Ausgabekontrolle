@@ -19,6 +19,8 @@ using iTextSharp.text.pdf;
 using System.Drawing.Printing;
 using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Diagnostics.Tracing;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Ausgabenkontrolle
 {
@@ -137,7 +139,24 @@ namespace Ausgabenkontrolle
             textBox3.Clear();
             textBox4.Clear();
         }
-      
+        private void SearchinTable(object sender, EventArgs e, Form userlist, DataGridView dgv, TextBox searchText)
+        {
+
+            string filter = string.Empty;
+            foreach (DataGridViewColumn column in dgv.Columns)
+            {
+                if (column.Index == 0)
+                {
+                    filter += string.Format("Vorname LIKE '%{0}%'", searchText.Text);
+                }
+                else
+                {
+                    filter += string.Format(" OR Vorname LIKE '%{0}%'", searchText.Text);
+                }
+            }
+            (dgv.DataSource as DataTable).DefaultView.RowFilter = filter;
+
+        }
         public void LoadData()
         {
             // Verbindungszeichenfolge aus der Konfiguration abrufen
@@ -175,6 +194,21 @@ namespace Ausgabenkontrolle
             col.Name = "Option";
             dgv.Columns.Add(col);
             dgv.CellClick += (sender, e) => { dgv_CellClick(sender, e, userlist);  }; 
+            TextBox searchText = new TextBox();
+            searchText.Dock = DockStyle.Top;
+            searchText.BorderStyle = BorderStyle.FixedSingle;
+            userlist.Controls.Add(searchText);
+            Button buttonsearch = new Button();
+            buttonsearch.Size = new Size(60, textBox1.ClientSize.Height + 3);
+            buttonsearch.Location = new Point(textBox1.ClientSize.Width - buttonsearch.Width, -1);
+            buttonsearch.Cursor = Cursors.Default;
+            buttonsearch.Text = "Search";
+           
+            buttonsearch.Click += (s, eventArgs) => { SearchinTable(s, eventArgs, userlist, dgv, searchText); };
+            searchText.Controls.Add(buttonsearch);
+
+
+
             Button button5 = new Button();
             button5.Text = "Save to PDF";
             button5.Dock = DockStyle.Bottom;
@@ -312,9 +346,9 @@ namespace Ausgabenkontrolle
                 GC.Collect();
             }
         }
+    
 
-
-       private void EditUser(int id)
+        private void EditUser(int id)
         {
             // Load user data from database using the given ID
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;

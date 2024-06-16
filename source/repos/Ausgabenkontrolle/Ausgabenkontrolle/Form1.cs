@@ -139,7 +139,7 @@ namespace Ausgabenkontrolle
             textBox3.Clear();
             textBox4.Clear();
         }
-        private void SearchinTable(object sender, EventArgs e, Form userlist, DataGridView dgv, TextBox searchText)
+        private void SearchinTable(object sender, EventArgs e, DataGridView dgv, TextBox searchText)
         {
 
             string filter = string.Empty;
@@ -159,6 +159,7 @@ namespace Ausgabenkontrolle
         }
         public void LoadData()
         {
+            panel2.Controls.Clear();
             // Verbindungszeichenfolge aus der Konfiguration abrufen
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             DataGridView dgv = new DataGridView
@@ -166,9 +167,7 @@ namespace Ausgabenkontrolle
                 Dock = DockStyle.Fill,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
-            Form userlist = new Form();
-            userlist.Size = new Size(800, 600);
-            userlist.Controls.Add(dgv);
+            panel2.Controls.Add(dgv);
             // using-Anweisungen zur korrekten Freigabe der Ressourcen verwenden
             using (SqlConnection sqlConnection = new SqlConnection(con_string))
             {
@@ -193,38 +192,50 @@ namespace Ausgabenkontrolle
 
             col.Name = "Option";
             dgv.Columns.Add(col);
-            dgv.CellClick += (sender, e) => { dgv_CellClick(sender, e, userlist);  }; 
+            dgv.CellClick += (sender, e) => { dgv_CellClick(sender, e);  }; 
+            Panel searchpanel = new Panel();
+            searchpanel.Width = dgv.Width/3;
+            searchpanel.Height = 30;
+            searchpanel.Dock=DockStyle.Top;
+            searchpanel.BorderStyle = BorderStyle.FixedSingle;
+            panel2.Controls.Add(searchpanel);
+
             TextBox searchText = new TextBox();
-            searchText.Dock = DockStyle.Top;
+        
+            // Set the BorderStyle property to FixedSingle.
             searchText.BorderStyle = BorderStyle.FixedSingle;
-            userlist.Controls.Add(searchText);
+            searchText.Width =  150;
+            searchText.Location = new Point(5, 5);
+            searchText.Anchor = AnchorStyles.Left;
+            searchpanel.Controls.Add(searchText);
+
             Button buttonsearch = new Button();
-            buttonsearch.Size = new Size(60, textBox1.ClientSize.Height + 3);
-            buttonsearch.Location = new Point(textBox1.ClientSize.Width - buttonsearch.Width, -1);
+            buttonsearch.Size = new Size(60, searchText.ClientSize.Height + 3);
+            buttonsearch.Location = new Point(searchText.Width+5, 3);
             buttonsearch.Cursor = Cursors.Default;
             buttonsearch.Text = "Search";
-           
-            buttonsearch.Click += (s, eventArgs) => { SearchinTable(s, eventArgs, userlist, dgv, searchText); };
-            searchText.Controls.Add(buttonsearch);
+            buttonsearch.Anchor = AnchorStyles.Top;
+            buttonsearch.Click += (s, eventArgs) => { SearchinTable(s, eventArgs, dgv, searchText); };
+            searchpanel.Controls.Add(buttonsearch);
 
 
 
             Button button5 = new Button();
             button5.Text = "Save to PDF";
             button5.Dock = DockStyle.Bottom;
-            userlist.Controls.Add(button5);
-            button5.Click += (s, eventArgs) => { SaveToPDF(s, eventArgs, userlist, dgv); };
+            panel2.Controls.Add(button5);
+            button5.Click += (s, eventArgs) => { SaveToPDF(s, eventArgs, dgv); };
 
             Button button6 = new Button();
             button6.Text = "Save to EXCEL";
             button6.Dock = DockStyle.Bottom;
-            userlist.Controls.Add(button6);
-            button6.Click += (s, eventArgs) => { SaveToEXCEL(s, eventArgs, userlist, dgv); };
-            userlist.ShowDialog();
+            panel2.Controls.Add(button6);
+            button6.Click += (s, eventArgs) => { SaveToEXCEL(s, eventArgs, dgv); };
+       
 
         }
 
-        private void dgv_CellClick(object sender, DataGridViewCellEventArgs e, Form userlist)
+        private void dgv_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Ensure the click is on a valid row, not a header or an invalid index
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
@@ -238,7 +249,7 @@ namespace Ausgabenkontrolle
 
                 // Hide panel2 if needed
                 panel2.Visible = false;
-               userlist.Hide();
+               dgv.Hide();
 
                 panel3.Visible = true; // Ensure panel3 is made visible
                 EditUser(id);
@@ -247,8 +258,9 @@ namespace Ausgabenkontrolle
 
 
 
-        private void SaveToPDF(object sender, EventArgs e, Form userlist, DataGridView dgv)
+        private void SaveToPDF(object sender, EventArgs e, DataGridView dgv)
         {
+           
             SaveFileDialog svg = new SaveFileDialog()
             {
                 Filter = "PDF files (*.pdf)|*.pdf"
@@ -260,7 +272,14 @@ namespace Ausgabenkontrolle
                 {
                     Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
                     PdfWriter.GetInstance(pdfDoc, stream);
-                    pdfDoc.Open();
+                    if (pdfDoc != null)
+                    {
+                        pdfDoc.Open();
+                    }
+                    else
+                    {
+                        MessageBox.Show("ne");
+                    }
 
 
                     PdfPTable t = new PdfPTable(dgv.ColumnCount);
@@ -288,7 +307,7 @@ namespace Ausgabenkontrolle
             }
 
         }
-        private void SaveToEXCEL(object sender, EventArgs e, Form userlist, DataGridView dgv)
+        private void SaveToEXCEL(object sender, EventArgs e, DataGridView dgv)
         {
             SaveFileDialog sfd = new SaveFileDialog
             {
@@ -350,6 +369,7 @@ namespace Ausgabenkontrolle
 
         private void EditUser(int id)
         {
+            panel3.Controls.Clear();
             // Load user data from database using the given ID
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection sqlConnection = new SqlConnection(con_string))
@@ -362,15 +382,36 @@ namespace Ausgabenkontrolle
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.Read())
                     {
+                        panel3.Controls.Add(label6);
                         textBox5.Text = !reader.IsDBNull(1) ? reader.GetString(1) : string.Empty;
+                        panel3.Controls.Add(textBox5);
+                        panel3.Controls.Add(label7);
                         textBox6.Text = !reader.IsDBNull(2) ? reader.GetString(2) : string.Empty;
+                        panel3.Controls.Add(textBox6);
+                        panel3.Controls.Add(label8);
                         dateTimePicker2.Value = !reader.IsDBNull(3) ? reader.GetDateTime(3) : DateTime.Now;
+                        panel3.Controls.Add(dateTimePicker2);
+                        panel3.Controls.Add(label9);
                         textBox7.Text = !reader.IsDBNull(4) ? reader.GetString(4) : string.Empty;
+                        panel3.Controls.Add(textBox7);
+                        panel3.Controls.Add(label10);
                         textBox8.Text = !reader.IsDBNull(5) ? reader.GetString(5) : string.Empty;
+                        panel3.Controls.Add(textBox8);
                     }
                 }
             }
-
+            Button button3 = new Button();
+            button3.Text = "Update";
+            button3.Dock = DockStyle.Bottom;
+            button3.Size = new System.Drawing.Size(75, 23);
+            button3.Click += (s, eventArgs) => { UpdateData(s, eventArgs); };
+            panel3.Controls.Add(button3);
+            Button button4 = new Button();
+            button4.Text = "Cancel";
+            button4.Dock = DockStyle.Bottom;
+            button4.Size = new System.Drawing.Size(75, 23);
+            button4.Click += (s, eventArgs) => { CancelButton(s, eventArgs); };
+            panel3.Controls.Add(button4);
             // Ensure the correct panels are visible
             panel3.Visible = true;
             panel2.Visible = false;
@@ -400,6 +441,8 @@ namespace Ausgabenkontrolle
                 // Verbindung öffnen und SQL-Befehl ausführen
                 sqlConnection.Open();
                 mycom.ExecuteNonQuery();
+                panel3.Visible=false;
+                panel2.Visible=true ;
                 LoadData(); // Refresh Form2 data
               
           

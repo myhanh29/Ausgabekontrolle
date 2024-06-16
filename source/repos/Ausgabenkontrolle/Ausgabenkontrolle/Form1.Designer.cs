@@ -188,8 +188,7 @@
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.button4);
-            this.panel3.Controls.Add(this.button3);
+           
             this.panel3.Controls.Add(this.textBox8);
             this.panel3.Controls.Add(this.textBox7);
             this.panel3.Controls.Add(this.textBox6);

@@ -1,26 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-using System.Diagnostics;
-using System.IO;
-using iTextSharp.text;
-using System.Data.SqlClient;
-using System.Configuration;
-
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using System.Drawing.Printing;
-using System.Xml.Linq;
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Diagnostics.Tracing;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Ausgabenkontrolle
 {
@@ -29,26 +15,49 @@ namespace Ausgabenkontrolle
         public Form1()
         {
             InitializeComponent();
-            panel1.Visible = true;
-            panel2.Visible = false;
-            panel3.Visible = false;
 
+            ShowPanel(panel1);
         }
+        // Variablen für das Datum, die DataGridView und die Benutzer-ID
         private string theDate;
+        private string theFakuetat;
+        private DataGridView dgv1;
         private DataGridView dgv;
         private int id;
+        private void ShowPanel(Panel panelToShow)
+        {
+            // Hide all panels
+            panel1.Visible = false;
+            panel2.Visible = false;
+            panel3.Visible = false;
+            panel4.Visible = false;
+            panelToShow.Visible = true;
+            panelToShow.BringToFront(); 
+            // Show the desired panel
+            panelToShow.Visible = true;
+        }
 
+        // Call this method to show the desired panel
+        
         // Ereignishandler für die Datumsänderung
         private void inputDate(object sender, EventArgs e)
         {
             theDate = dateTimePicker1.Value.ToString("dd.MM.yyyy");
         }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            theFakuetat=comboBox1.Text;
+
+        }
         // Ereignishandler für das Speichern eines Benutzers
         private void SaveUser(object sender, EventArgs e)
         {
-            string[] labels = { "Vorname: ", "Nachname: ", "Geburtdatum: ", "Anschrift: ", "Handynummer: " };
-        string[] datas = { textBox1.Text, textBox2.Text, theDate, textBox3.Text, textBox4.Text };
+            
+            // Code zum Anzeigen des Benutzersteuerelements in einem Popup-Fenster
+
+            string[] labels = { "Vorname: ", "Nachname: ", "Geburtdatum: ", "Anschrift: ", "Handynummer: " , "Fakueltat: "};
+        string[] datas = { textBox1.Text, textBox2.Text, theDate, textBox3.Text, textBox4.Text, theFakuetat };
         
             UserControl1 userControl1 = new UserControl1(labels, datas);
             Form form = new Form();
@@ -71,14 +80,15 @@ namespace Ausgabenkontrolle
             button2.Click += CancelButonnClick; 
             form.ShowDialog();
         }
-        // Methode zum Speichern der Daten in der Datenbank
-       private void SavetoDB(object sender, EventArgs e)
+
+            // Methode zum Speichern der Daten in der Datenbank
+            private void SavetoDB(object sender, EventArgs e)
         {
             // Verbindungszeichenfolge aus der Konfiguration abrufen
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             // SQL-Befehl zum Einfügen von Daten in die Tabelle Userdatas
-            string myinsert = "INSERT INTO UserData (Vorname, Nachname, Geburtdatum, Anschrift, Handynummer) VALUES (@Vorname, @Nachname, @Geburtdatum, @Anschrift, @Handynummer)";
+            string myinsert = "INSERT INTO UserData (Vorname, Nachname, Geburtdatum, Anschrift, Handynummer, Fakueltat) VALUES (@Vorname, @Nachname, @Geburtdatum, @Anschrift, @Handynummer, @Fakueltat)";
 
             // using-Anweisungen zur korrekten Freigabe der Ressourcen verwenden
             using (SqlConnection sqlConnection = new SqlConnection(con_string))
@@ -105,6 +115,10 @@ namespace Ausgabenkontrolle
                     mycom.Parameters.AddWithValue("@Geburtdatum", DBNull.Value);
                 }
 
+                if(comboBox1.Items.Count > 0)
+                {
+                    mycom.Parameters.AddWithValue("@Fakueltat", comboBox1.Text);
+                }
 
                 mycom.Parameters.AddWithValue("@Anschrift", textBox3.Text);
                     mycom.Parameters.AddWithValue("@Handynummer", textBox4.Text);
@@ -119,8 +133,7 @@ namespace Ausgabenkontrolle
         {
             SavetoDB(sender, e);
             form.Close();
-            panel1.Visible = false;
-            panel2.Visible = true;
+            ShowPanel(panel2);
             LoadData();
 
         }
@@ -139,6 +152,7 @@ namespace Ausgabenkontrolle
             textBox3.Clear();
             textBox4.Clear();
         }
+        // Ereignishandler für die Suche in der Tabelle
         private void SearchinTable(object sender, EventArgs e, DataGridView dgv, TextBox searchText)
         {
 
@@ -157,8 +171,11 @@ namespace Ausgabenkontrolle
             (dgv.DataSource as DataTable).DefaultView.RowFilter = filter;
 
         }
+    
+        // Methode zum Laden von Daten in die DataGridView
         public void LoadData()
         {
+            ShowPanel(panel2);
             panel2.Controls.Clear();
             // Verbindungszeichenfolge aus der Konfiguration abrufen
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -234,7 +251,9 @@ namespace Ausgabenkontrolle
        
 
         }
+      
 
+        // Ereignishandler für den Klick auf die "Bearbeiten"-Schaltfläche in der DataGridView
         private void dgv_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Ensure the click is on a valid row, not a header or an invalid index
@@ -248,16 +267,16 @@ namespace Ausgabenkontrolle
                 id = Convert.ToInt32(dgv.Rows[e.RowIndex].Cells["Id"].Value);
 
                 // Hide panel2 if needed
-                panel2.Visible = false;
+                
                dgv.Hide();
 
-                panel3.Visible = true; // Ensure panel3 is made visible
+                ShowPanel(panel3); // Ensure panel3 is made visible
                 EditUser(id);
             }
         }
 
 
-
+        // Ereignishandler für den Klick auf die "Speichern als PDF"-Schaltfläche
         private void SaveToPDF(object sender, EventArgs e, DataGridView dgv)
         {
            
@@ -276,10 +295,7 @@ namespace Ausgabenkontrolle
                     {
                         pdfDoc.Open();
                     }
-                    else
-                    {
-                        MessageBox.Show("ne");
-                    }
+                   
 
 
                     PdfPTable t = new PdfPTable(dgv.ColumnCount);
@@ -307,6 +323,7 @@ namespace Ausgabenkontrolle
             }
 
         }
+        // Ereignishandler für den Klick auf die "Speichern als EXCEL"-Schaltfläche
         private void SaveToEXCEL(object sender, EventArgs e, DataGridView dgv)
         {
             SaveFileDialog sfd = new SaveFileDialog
@@ -348,6 +365,7 @@ namespace Ausgabenkontrolle
             }
         }
 
+        // Methode zum Freigeben von COM-Objekten
         private void ReleaseObject(object obj)
         {
             try
@@ -365,10 +383,12 @@ namespace Ausgabenkontrolle
                 GC.Collect();
             }
         }
-    
 
+        // Methode zum Bearbeiten eines Benutzers
         private void EditUser(int id)
         {
+            panel3.BringToFront();
+            ShowPanel(panel3);
             panel3.Controls.Clear();
             // Load user data from database using the given ID
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -397,6 +417,10 @@ namespace Ausgabenkontrolle
                         panel3.Controls.Add(label10);
                         textBox8.Text = !reader.IsDBNull(5) ? reader.GetString(5) : string.Empty;
                         panel3.Controls.Add(textBox8);
+                        panel3.Controls.Add(label12);
+                        string faculty =reader.GetString(6);
+                        comboBox2.SelectedItem = faculty;
+                        panel3.Controls.Add(comboBox2);
                     }
                 }
             }
@@ -412,11 +436,10 @@ namespace Ausgabenkontrolle
             button4.Size = new System.Drawing.Size(75, 23);
             button4.Click += (s, eventArgs) => { CancelButton(s, eventArgs); };
             panel3.Controls.Add(button4);
-            // Ensure the correct panels are visible
-            panel3.Visible = true;
-            panel2.Visible = false;
+          
         }
 
+        // Ereignishandler für den Klick auf die "Update"-Schaltfläche im Bearbeitungsmodus
         private void UpdateData(object sender, EventArgs e)
         {
 
@@ -424,7 +447,7 @@ namespace Ausgabenkontrolle
             string con_string = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             // SQL-Befehl zum Einfügen von Daten in die Tabelle Userdatas
-            string myinsert = "UPDATE UserData SET Vorname=@Vorname, Nachname=@Nachname, Geburtdatum=@Geburtdatum, Anschrift=@Anschrift, Handynummer=@Handynummer WHERE Id=@Id";
+            string myinsert = "UPDATE UserData SET Vorname=@Vorname, Nachname=@Nachname, Geburtdatum=@Geburtdatum, Anschrift=@Anschrift, Handynummer=@Handynummer, Fakueltat=@Fakueltat WHERE Id=@Id";
 
             // using-Anweisungen zur korrekten Freigabe der Ressourcen verwenden
             using (SqlConnection sqlConnection = new SqlConnection(con_string))
@@ -438,6 +461,10 @@ namespace Ausgabenkontrolle
 
                 mycom.Parameters.AddWithValue("@Anschrift", textBox7.Text);
                 mycom.Parameters.AddWithValue("@Handynummer", textBox8.Text);
+                string fakultat = comboBox2.SelectedItem?.ToString() ?? string.Empty;
+                mycom.Parameters.AddWithValue("@Fakueltat", fakultat);
+
+                
                 // Verbindung öffnen und SQL-Befehl ausführen
                 sqlConnection.Open();
                 mycom.ExecuteNonQuery();
@@ -449,11 +476,13 @@ namespace Ausgabenkontrolle
             }
         }
 
+        // Ereignishandler für den Klick auf die "Cancel"-Schaltfläche im Bearbeitungsmodus
         private void CancelButton(object sender, EventArgs e)
         {
             Close();
         }
 
+       
     }
 
 }

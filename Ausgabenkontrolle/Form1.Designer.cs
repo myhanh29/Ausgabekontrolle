@@ -42,14 +42,11 @@
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
@@ -60,6 +57,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.SuspendLayout();
@@ -108,15 +108,6 @@
             this.label5.Size = new System.Drawing.Size(95, 16);
             this.label5.TabIndex = 4;
             this.label5.Text = "Handynummer";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(154, 301);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(54, 16);
-            this.label11.TabIndex = 13;
-            this.label11.Text = "Fakültat";
             // 
             // button1
             // 
@@ -196,6 +187,15 @@
             this.panel1.TabIndex = 12;
             
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(154, 301);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(54, 16);
+            this.label11.TabIndex = 13;
+            this.label11.Text = "Fakültat";
+            // 
             // comboBox1
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -232,12 +232,65 @@
             "Soziale Arbeit (B.A.)",
             "Soziale Arbeit: Erziehung und Bildung im Lebenslauf (B.A.)",
             "Architektur (B.A.)",
-            "Design (B.A.)"});
+            "Design (B.A.)",
+            ""});
             this.comboBox1.Location = new System.Drawing.Point(314, 301);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(363, 24);
             this.comboBox1.TabIndex = 12;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(40, 250);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(54, 16);
+            this.label12.TabIndex = 13;
+            this.label12.Text = "Fakültat";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "Angewandte Materialwissenschaften (B.Eng.)",
+            "Bauingenieurwesen (B.Eng.)",
+            "Elektrotechnik und Informationstechnik (B.Eng.)",
+            "Energie- und Gebäudetechnik (B.Eng.)",
+            "Energie- und regenerative Technik (B.Eng.)",
+            "Energie- und Wasserstofftechnik (B.Eng.)",
+            "Fahrzeugtechnik (B.Eng.)",
+            "Ingenieurpädagogik (B.Sc.)",
+            "International Business and Technology (B.Eng.)",
+            "Maschinenbau (B.Eng.)",
+            "Mechanical Engineering (B.Eng.)",
+            "Mechatronik / Feinwerktechnik (B.Eng.)",
+            "Media Engineering (B.Eng.)",
+            "Medizintechnik (B.Eng.)",
+            "Technikjournalismus / Technik-PR (B.A.)",
+            "Verfahrenstechnik (B.Eng.)",
+            "Angewandte Chemie (B.Sc.)",
+            "Angewandte Mathematik und Physik (B.Sc.)",
+            "Digitales Gesundheitsmanagement (B.Sc.)",
+            "Informatik (B.Sc.)",
+            "Medieninformatik (B.Sc.)",
+            "Social Data Science & Communication (B.Sc.)",
+            "Wirtschaftsinformatik (B.Sc.)",
+            "Betriebswirtschaft (B.A.)",
+            "Betriebswirtschaft berufsbegleitend (B.A.)",
+            "International Business (B.A.)",
+            "Management in der Ökobranche (B.A.)",
+            "Public Management (B.A.) berufsbegleitend",
+            "Soziale Arbeit (B.A.)",
+            "Soziale Arbeit: Erziehung und Bildung im Lebenslauf (B.A.)",
+            "Architektur (B.A.)",
+            "Design (B.A.)",
+            ""});
+            this.comboBox2.Location = new System.Drawing.Point(135, 245);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(363, 24);
+            this.comboBox2.TabIndex = 12;
             // 
             // panel4
             // 
@@ -262,33 +315,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(789, 460);
             this.panel3.TabIndex = 13;
-            // 
-            // panel2
-            // 
-            this.panel2.Location = new System.Drawing.Point(29, 15);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(789, 460);
-            this.panel2.TabIndex = 13;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(265, 355);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(128, 24);
-            this.button4.TabIndex = 25;
-            this.button4.Text = "Cancel";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.CancelButton);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(265, 311);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(128, 23);
-            this.button3.TabIndex = 24;
-            this.button3.Text = "Update";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.UpdateData);
             // 
             // textBox8
             // 
@@ -370,58 +396,32 @@
             this.label6.TabIndex = 14;
             this.label6.Text = "Vorname";
             // 
-            // label12
+            // panel2
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(40, 250);
-            this.label12.Name = "label11";
-            this.label12.Size = new System.Drawing.Size(54, 16);
-            this.label12.TabIndex = 13;
-            this.label12.Text = "Fakültat";
-
+            this.panel2.Location = new System.Drawing.Point(29, 15);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(789, 460);
+            this.panel2.TabIndex = 13;
             // 
-            // comboBox2
+            // button4
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "Angewandte Materialwissenschaften (B.Eng.)",
-            "Bauingenieurwesen (B.Eng.)",
-            "Elektrotechnik und Informationstechnik (B.Eng.)",
-            "Energie- und Gebäudetechnik (B.Eng.)",
-            "Energie- und regenerative Technik (B.Eng.)",
-            "Energie- und Wasserstofftechnik (B.Eng.)",
-            "Fahrzeugtechnik (B.Eng.)",
-            "Ingenieurpädagogik (B.Sc.)",
-            "International Business and Technology (B.Eng.)",
-            "Maschinenbau (B.Eng.)",
-            "Mechanical Engineering (B.Eng.)",
-            "Mechatronik / Feinwerktechnik (B.Eng.)",
-            "Media Engineering (B.Eng.)",
-            "Medizintechnik (B.Eng.)",
-            "Technikjournalismus / Technik-PR (B.A.)",
-            "Verfahrenstechnik (B.Eng.)",
-            "Angewandte Chemie (B.Sc.)",
-            "Angewandte Mathematik und Physik (B.Sc.)",
-            "Digitales Gesundheitsmanagement (B.Sc.)",
-            "Informatik (B.Sc.)",
-            "Medieninformatik (B.Sc.)",
-            "Social Data Science & Communication (B.Sc.)",
-            "Wirtschaftsinformatik (B.Sc.)",
-            "Betriebswirtschaft (B.A.)",
-            "Betriebswirtschaft berufsbegleitend (B.A.)",
-            "International Business (B.A.)",
-            "Management in der Ökobranche (B.A.)",
-            "Public Management (B.A.) berufsbegleitend",
-            "Soziale Arbeit (B.A.)",
-            "Soziale Arbeit: Erziehung und Bildung im Lebenslauf (B.A.)",
-            "Architektur (B.A.)",
-            "Design (B.A.)"});
-            this.comboBox2.Location = new System.Drawing.Point(135, 245);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(363, 24);
-            this.comboBox2.TabIndex = 12;
-            
+            this.button4.Location = new System.Drawing.Point(265, 355);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(128, 24);
+            this.button4.TabIndex = 25;
+            this.button4.Text = "Cancel";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.CancelButton);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(265, 311);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(128, 23);
+            this.button3.TabIndex = 24;
+            this.button3.Text = "Update";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.UpdateData);
             // 
             // Form1
             // 

@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Ausgabenkontrolle
@@ -418,7 +419,7 @@ namespace Ausgabenkontrolle
                         textBox8.Text = !reader.IsDBNull(5) ? reader.GetString(5) : string.Empty;
                         panel3.Controls.Add(textBox8);
                         panel3.Controls.Add(label12);
-                        string faculty =reader.GetString(6);
+                        string faculty = !reader.IsDBNull(6) ? reader.GetString(6) : string.Empty;
                         comboBox2.SelectedItem = faculty;
                         panel3.Controls.Add(comboBox2);
                     }
@@ -455,12 +456,31 @@ namespace Ausgabenkontrolle
                 SqlCommand mycom = new SqlCommand(myinsert, sqlConnection);
 
                 mycom.Parameters.AddWithValue("@Id", id);
-                mycom.Parameters.AddWithValue("@Vorname", textBox5.Text);
-                mycom.Parameters.AddWithValue("@Nachname", textBox6.Text);
-                mycom.Parameters.AddWithValue("@Geburtdatum", dateTimePicker2.Value);
-
-                mycom.Parameters.AddWithValue("@Anschrift", textBox7.Text);
-                mycom.Parameters.AddWithValue("@Handynummer", textBox8.Text);
+                string vorname = textBox5?.Text ?? string.Empty;
+                mycom.Parameters.AddWithValue("@Vorname", vorname);
+                string nachname = textBox6?.Text ?? string.Empty;
+                mycom.Parameters.AddWithValue("@Nachname", nachname);
+                string time = dateTimePicker2.Value.ToString("dd.MM.yyyy");
+                if (!string.IsNullOrEmpty(time))
+                {
+                    if (DateTime.TryParseExact(time, "dd.MM.yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+                    {
+                        mycom.Parameters.AddWithValue("@Geburtdatum", parsedDate);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid date format. Please enter the date in dd.MM.yyyy format.");
+                        return;
+                    }
+                }
+                else
+                {
+                    mycom.Parameters.AddWithValue("@Geburtdatum", DBNull.Value);
+                }
+                string anschrift = textBox7?.Text ?? string.Empty;
+                mycom.Parameters.AddWithValue("@Anschrift", anschrift);
+                string handynummer = textBox8?.Text ?? string.Empty;
+                mycom.Parameters.AddWithValue("@Handynummer", handynummer);
                 string fakultat = comboBox2.SelectedItem?.ToString() ?? string.Empty;
                 mycom.Parameters.AddWithValue("@Fakueltat", fakultat);
 
